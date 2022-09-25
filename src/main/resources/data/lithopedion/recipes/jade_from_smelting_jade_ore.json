@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "lithopedion:jade_ore"
+  },
+  "result": "lithopedion:jade",
+  "experience": 0.9,
+  "cookingtime": 300
+}

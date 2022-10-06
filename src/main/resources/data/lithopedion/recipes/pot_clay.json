@@ -1,0 +1,18 @@
+{
+  "type": "lithopedion:pottery_wheel",
+  "ingredients": [
+    {
+      "item": "lithopedion:pottery_staff_medium"
+    },
+    {
+      "item": "lithopedion:parchment_pot"
+    },
+    {
+      "item": "minecraft:clay"
+    }
+  ],
+  "result": {
+    "item": "lithopedion:pot_clay",
+    "count": 1
+  }
+}

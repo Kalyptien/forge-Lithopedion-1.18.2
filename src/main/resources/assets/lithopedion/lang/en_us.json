@@ -1,11 +1,34 @@
 {
   "item.lithopedion.jade": "Jade",
-  "item.lithopedion.naga_hearth": "Naga hearth",
-  "item.lithopedion.soldier_hearth": "Solider hearth",
-  "item.lithopedion.clay_hearth": "Clay hearth",
+  "item.lithopedion.naga_hearth": "Naga Hearth",
+  "item.lithopedion.soldier_hearth": "Solider Hearth",
+  "item.lithopedion.clay_hearth": "Clay Hearth",
+  "item.lithopedion.parchment_lithopedion": "Parchment: Lithopedions",
+  "item.lithopedion.parchment_pot": "Parchment: Pots",
+  "item.lithopedion.parchment_mask": "Parchment: Masks",
 
-  "block.lithopedion.jade_block": "Jade block",
-  "block.lithopedion.jade_ore": "Jade ore",
+  "item.lithopedion.pottery_staff_fast": "Pottery Staff (fast)",
+  "item.lithopedion.pottery_staff_medium": "Pottery Staff (medium)",
+  "item.lithopedion.pottery_staff_slow": "Pottery Staff (slow)",
+
+  "block.lithopedion.jade_block": "Block Of Jade",
+  "block.lithopedion.jade_ore": "Jade Ore",
+  "block.lithopedion.deepslate_jade_ore": "Deepslate Jade Ore",
+
+  "block.lithopedion.lithopedion_clay": "Clay Lithopedion",
+  "block.lithopedion.lithopedion_terracotta": "Dead Lithopedion",
+  "block.lithopedion.lithopedion_soldier": "Stone Lithopedion",
+  "block.lithopedion.lithopedion_jade": "Jade Lithopedion",
+
+  "block.lithopedion.pot_clay": "Clay Pot",
+  "block.lithopedion.tall_pot_clay": "Tall clay Pot",
+  "block.lithopedion.small_pot_clay": "Small clay Pot",
+  "block.lithopedion.pot_terracotta": "Terracota Pot",
+  "block.lithopedion.tall_pot_terracotta": "Tall terracotta Pot",
+  "block.lithopedion.small_pot_terracotta": "Small terracotta Pot",
+
+  "block.lithopedion.earth_furnace": "Earth's Furnace",
+  "block.lithopedion.pottery_wheel": "Pottery Wheel",
 
   "itemGroup.lithopediontab": "Lithopedion Mod"
 }

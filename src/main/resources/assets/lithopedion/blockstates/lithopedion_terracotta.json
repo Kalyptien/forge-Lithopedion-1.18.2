@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "lithopedion:block/lithopedion_terracotta" },
+		"facing=east": { "model": "lithopedion:block/lithopedion_terracotta", "y": 90 },
+		"facing=south": { "model": "lithopedion:block/lithopedion_terracotta", "y": 180 },
+		"facing=west": { "model": "lithopedion:block/lithopedion_terracotta", "y": 270 }
+	}
+}

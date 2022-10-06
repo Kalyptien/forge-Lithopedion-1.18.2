@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "lithopedion:tall_pot_clay"
+  },
+  "result": "lithopedion:tall_pot_terracotta",
+  "experience": 0.3,
+  "cookingtime": 500
+}

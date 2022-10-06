@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "lithopedion:block/earth_furnace" },
+		"facing=east": { "model": "lithopedion:block/earth_furnace", "y": 90 },
+		"facing=south": { "model": "lithopedion:block/earth_furnace", "y": 180 },
+		"facing=west": { "model": "lithopedion:block/earth_furnace", "y": 270 }
+	}
+}

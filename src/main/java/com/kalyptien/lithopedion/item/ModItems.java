@@ -1,8 +1,10 @@
 package com.kalyptien.lithopedion.item;
 
 import com.kalyptien.lithopedion.Lithopedion;
+import com.kalyptien.lithopedion.entity.ModEntityTypes;
 import com.kalyptien.lithopedion.item.custom.PotteryStaffItem;
 import net.minecraft.world.item.Item;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -26,6 +28,9 @@ public class ModItems {
     public static final RegistryObject<Item> POTTERY_STAFF_MEDIUM = ITEMS.register("pottery_staff_medium", () -> new PotteryStaffItem(new Item.Properties().tab(ModCreativeModeTab.LITHOPEDION_TAB)));
     public static final RegistryObject<Item> POTTERY_STAFF_SLOW = ITEMS.register("pottery_staff_slow", () -> new PotteryStaffItem(new Item.Properties().tab(ModCreativeModeTab.LITHOPEDION_TAB)));
 
+    public static final RegistryObject<Item> COE_SPAWN_EGG = ITEMS.register("coe_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.COE,0x948e8d, 0x3b3635,
+                    new Item.Properties().tab(ModCreativeModeTab.LITHOPEDION_TAB)));
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);
     }

@@ -2,6 +2,8 @@ package com.kalyptien.lithopedion;
 
 import com.kalyptien.lithopedion.block.ModBlocks;
 import com.kalyptien.lithopedion.block.entity.ModBlockEntities;
+import com.kalyptien.lithopedion.entity.ModEntityTypes;
+import com.kalyptien.lithopedion.entity.client.ChildrenRenderer;
 import com.kalyptien.lithopedion.item.ModItems;
 import com.kalyptien.lithopedion.recipe.ModRecipes;
 import com.kalyptien.lithopedion.screen.ModMenuTypes;
@@ -10,6 +12,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -25,6 +28,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 import java.util.stream.Collectors;
 
@@ -47,8 +51,12 @@ public class Lithopedion
         ModRecipes.register(eventBus);
         ModMenuTypes.register(eventBus);
 
+        ModEntityTypes.register(eventBus);
+
         eventBus.addListener(this::setup);
         eventBus.addListener(this::clientSetup);
+
+        GeckoLib.initialize();
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -67,6 +75,8 @@ public class Lithopedion
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTERY_WHEEL.get(), RenderType.translucent());
 
         MenuScreens.register(ModMenuTypes.POTTERY_WHEEL_MENU.get(), PotteryWheelScreen::new);
+
+        EntityRenderers.register(ModEntityTypes.COE.get(), ChildrenRenderer::new);
     }
 
     private void setup(final FMLCommonSetupEvent event) {

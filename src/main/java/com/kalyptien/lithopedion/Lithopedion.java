@@ -4,6 +4,7 @@ import com.kalyptien.lithopedion.block.ModBlocks;
 import com.kalyptien.lithopedion.block.entity.ModBlockEntities;
 import com.kalyptien.lithopedion.entity.ModEntityTypes;
 import com.kalyptien.lithopedion.entity.client.ChildrenRenderer;
+import com.kalyptien.lithopedion.entity.client.SoldierRenderer;
 import com.kalyptien.lithopedion.item.ModItems;
 import com.kalyptien.lithopedion.recipe.ModRecipes;
 import com.kalyptien.lithopedion.screen.ModMenuTypes;
@@ -71,12 +72,21 @@ public class Lithopedion
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.TALL_POT_CLAY.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.SMALL_POT_CLAY.get(), RenderType.translucent());
 
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.POT_TERRACOTTA.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.TALL_POT_TERRACOTTA.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SMALL_POT_TERRACOTTA.get(), RenderType.translucent());
+
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNGUS_AUTEL.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNGUS_STATUS.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNGUS_STONE.get(), RenderType.translucent());
+
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.EARTH_FURNACE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTERY_WHEEL.get(), RenderType.translucent());
 
         MenuScreens.register(ModMenuTypes.POTTERY_WHEEL_MENU.get(), PotteryWheelScreen::new);
 
         EntityRenderers.register(ModEntityTypes.COE.get(), ChildrenRenderer::new);
+        EntityRenderers.register(ModEntityTypes.SOE.get(), SoldierRenderer::new);
     }
 
     private void setup(final FMLCommonSetupEvent event) {

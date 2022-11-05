@@ -20,14 +20,10 @@ public class ChildrenRenderer extends GeoEntityRenderer<ChildrenEntity> {
 
     public static final Map<ChildrenVariant, ResourceLocation> LOCATION_BY_VARIANT =
             Util.make(Maps.newEnumMap(ChildrenVariant.class), (p_114874_) -> {
-                p_114874_.put(ChildrenVariant.DEFAULT,
-                        new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/coe/stone.png"));
-                p_114874_.put(ChildrenVariant.DIORITE,
-                        new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/coe/diorite.png"));
-                p_114874_.put(ChildrenVariant.ANDESITE,
-                        new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/coe/andesite.png"));
-                p_114874_.put(ChildrenVariant.GRANITE,
-                        new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/coe/granite.png"));
+                for (int i = 0; i < ChildrenVariant.values().length; i++){
+                    p_114874_.put(ChildrenVariant.byId(i),
+                            new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/coe/" + ChildrenVariant.byId(i).toString().toLowerCase() +".png"));
+                }
             });
 
     public ChildrenRenderer(EntityRendererProvider.Context renderManager) {

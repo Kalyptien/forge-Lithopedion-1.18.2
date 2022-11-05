@@ -2,6 +2,7 @@ package com.kalyptien.lithopedion.block;
 
 import com.kalyptien.lithopedion.Lithopedion;
 import com.kalyptien.lithopedion.block.custom.*;
+import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
 import com.kalyptien.lithopedion.item.ModCreativeModeTab;
 import com.kalyptien.lithopedion.item.ModItems;
 import net.minecraft.world.item.BlockItem;
@@ -52,28 +53,42 @@ public class ModBlocks {
             ModCreativeModeTab.LITHOPEDION_TAB);
     // ===================================================================================================================== DECORATIONS
     public static final RegistryObject<Block> POT_CLAY = registerBlock("pot_clay",
-            () -> new PotClayBlock(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()),
+            () -> new PotBlock(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> TALL_POT_CLAY = registerBlock("tall_pot_clay",
-            () -> new TallPotClayBlock(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()),
+            () -> new TallPotBlock(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> SMALL_POT_CLAY = registerBlock("small_pot_clay",
-            () -> new SmallPotClayBlock(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()),
+            () -> new SmallPotBlock(BlockBehaviour.Properties.copy(Blocks.CLAY).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> POT_TERRACOTTA = registerBlock("pot_terracotta",
-            () -> new PotClayBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA).noOcclusion()),
+            () -> new PotBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> TALL_POT_TERRACOTTA = registerBlock("tall_pot_terracotta",
-            () -> new TallPotClayBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA).noOcclusion()),
+            () -> new TallPotBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> SMALL_POT_TERRACOTTA = registerBlock("small_pot_terracotta",
-            () -> new SmallPotClayBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA).noOcclusion()),
+            () -> new SmallPotBlock(BlockBehaviour.Properties.copy(Blocks.TERRACOTTA).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
+    // ===================================================================================================================== SANCTUARY
+
+    public static final RegistryObject<Block> FUNGUS_AUTEL = registerBlock("fungus_autel",
+            () -> new SanctuaryAutelBlock(BlockBehaviour.Properties.copy(Blocks.SPRUCE_WOOD).noOcclusion(), 20, SanctuaryVariant.FUNGUS),
+            ModCreativeModeTab.LITHOPEDION_TAB);
+
+    public static final RegistryObject<Block> FUNGUS_STONE = registerBlock("fungus_stone",
+            () -> new SanctuaryStoneBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion(), 10, SanctuaryVariant.FUNGUS),
+            ModCreativeModeTab.LITHOPEDION_TAB);
+
+    public static final RegistryObject<Block> FUNGUS_STATUS = registerBlock("fungus_status",
+            () -> new SanctuaryStatusBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).noOcclusion(), 10, SanctuaryVariant.FUNGUS),
+            ModCreativeModeTab.LITHOPEDION_TAB);
+
     // ===================================================================================================================== CRAFT
     public static final RegistryObject<Block> EARTH_FURNACE = registerBlock("earth_furnace",
             () -> new EarthFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE).noOcclusion()),
@@ -82,6 +97,8 @@ public class ModBlocks {
     public static final RegistryObject<Block> POTTERY_WHEEL = registerBlock("pottery_wheel",
             () -> new PotteryWheelBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
+
+    // =====================================================================================================================
 
     private static <T extends Block>RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab){
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

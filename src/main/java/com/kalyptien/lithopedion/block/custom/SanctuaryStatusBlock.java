@@ -1,8 +1,15 @@
 package com.kalyptien.lithopedion.block.custom;
 
+import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
+import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
+import com.kalyptien.lithopedion.entity.variant.SanctuaryBlockVariant;
+import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -12,14 +19,26 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.spongepowered.asm.mixin.Implements;
 
-public class SmallPotClayBlock extends Block {
+import javax.annotation.Nullable;
+
+public class SanctuaryStatusBlock extends SanctuaryBlock {
+
+    private SanctuaryBlock sanctuary;
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(2, 0, 2, 12, 14, 14);
+    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 16, 16);
 
-    public SmallPotClayBlock(Properties properties){
+    public SanctuaryStatusBlock(Properties properties, int area, SanctuaryVariant Svariant){
         super(properties);
+        this.area = area;
+        this.Svariant = Svariant;
+        this.SBvariant = SanctuaryBlockVariant.STATUS;
+    }
+
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
     }
 
     @Override

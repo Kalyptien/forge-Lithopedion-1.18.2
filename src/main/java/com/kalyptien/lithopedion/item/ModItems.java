@@ -29,7 +29,11 @@ public class ModItems {
     public static final RegistryObject<Item> POTTERY_STAFF_SLOW = ITEMS.register("pottery_staff_slow", () -> new PotteryStaffItem(new Item.Properties().tab(ModCreativeModeTab.LITHOPEDION_TAB)));
 
     public static final RegistryObject<Item> COE_SPAWN_EGG = ITEMS.register("coe_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntityTypes.COE,0x948e8d, 0x3b3635,
+            () -> new ForgeSpawnEggItem(ModEntityTypes.COE,0x636363, 0x9c9c9c,
+                    new Item.Properties().tab(ModCreativeModeTab.LITHOPEDION_TAB)));
+
+    public static final RegistryObject<Item> SOE_SPAWN_EGG = ITEMS.register("soe_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntityTypes.SOE,0x636363, 0x947540,
                     new Item.Properties().tab(ModCreativeModeTab.LITHOPEDION_TAB)));
     public static void register(IEventBus eventBus){
         ITEMS.register(eventBus);

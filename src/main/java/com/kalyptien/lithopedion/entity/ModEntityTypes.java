@@ -2,6 +2,7 @@ package com.kalyptien.lithopedion.entity;
 
 import com.kalyptien.lithopedion.Lithopedion;
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
+import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -19,6 +20,12 @@ public class ModEntityTypes {
                     () -> EntityType.Builder.of(ChildrenEntity::new, MobCategory.CREATURE)
                             .sized(0.1f, 0.3f)
                             .build(new ResourceLocation(Lithopedion.MOD_ID, "coe").toString()));
+
+    public static final RegistryObject<EntityType<SoldierEntity>> SOE =
+            ENTITY_TYPES.register("soe",
+                    () -> EntityType.Builder.of(SoldierEntity::new, MobCategory.CREATURE)
+                            .sized(1f, 1.5f)
+                            .build(new ResourceLocation(Lithopedion.MOD_ID, "soe").toString()));
 
 
     public static void register(IEventBus eventBus) {

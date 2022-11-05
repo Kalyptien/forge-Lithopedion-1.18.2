@@ -1,10 +1,9 @@
 package com.kalyptien.lithopedion.entity.ai;
 
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
-import com.kalyptien.lithopedion.entity.harvest.ChildrenHarvest;
+import com.kalyptien.lithopedion.entity.variant.ChildrenHarvestVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 
@@ -65,15 +64,15 @@ public class ChildrenHarvestGoal extends MoveToBlockGoal {
                 BlockPos blockpos = pos.above(i);
                 if (i > 2 && worldIn.getBlockState(blockpos).getBlock() == Blocks.GRASS) {
                     this.targetPos = blockpos;
-                    this.children.setHarvestType(ChildrenHarvest.FABRIC.getId());
+                    this.children.setHarvestType(ChildrenHarvestVariant.FABRIC.getId());
                     return true;
                 } else if (i > 2 && worldIn.getBlockState(blockpos).getBlock() == Blocks.OAK_WOOD) {
                     this.targetPos = blockpos;
-                    this.children.setHarvestType(ChildrenHarvest.WOOD.getId());
+                    this.children.setHarvestType(ChildrenHarvestVariant.WOOD.getId());
                     return true;
                 } else if (i > 2 && worldIn.getBlockState(blockpos).getBlock() == Blocks.STONE) {
                     this.targetPos = blockpos;
-                    this.children.setHarvestType(ChildrenHarvest.STONE.getId());
+                    this.children.setHarvestType(ChildrenHarvestVariant.STONE.getId());
                     return true;
                 } else if (worldIn.getBlockState(blockpos).isCollisionShapeFullBlock(worldIn, pos.above(i))) {
                     return false;

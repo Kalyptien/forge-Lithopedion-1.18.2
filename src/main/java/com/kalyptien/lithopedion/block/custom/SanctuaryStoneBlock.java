@@ -1,8 +1,15 @@
 package com.kalyptien.lithopedion.block.custom;
 
+import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
+import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
+import com.kalyptien.lithopedion.entity.variant.SanctuaryBlockVariant;
+import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -13,13 +20,23 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TallPotClayBlock extends Block {
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+
+public class SanctuaryStoneBlock extends SanctuaryBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(4, 0, 4, 12, 15, 12);
+    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 16, 16);
 
-    public TallPotClayBlock(Properties properties){
+    public SanctuaryStoneBlock(Properties properties, int area, SanctuaryVariant Svariant){
         super(properties);
+        this.area = area;
+        this.Svariant = Svariant;
+        this.SBvariant = SanctuaryBlockVariant.STONE;
+    }
+
+    @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
     }
 
     @Override

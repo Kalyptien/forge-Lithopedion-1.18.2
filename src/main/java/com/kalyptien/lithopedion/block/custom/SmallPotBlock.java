@@ -13,12 +13,12 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class PotClayBlock extends Block {
+public class SmallPotBlock extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(4, 0, 4, 12, 12, 12);
+    private static final VoxelShape SHAPE =  Block.box(2, 0, 2, 12, 14, 14);
 
-    public PotClayBlock(Properties properties){
+    public SmallPotBlock(Properties properties){
         super(properties);
     }
 

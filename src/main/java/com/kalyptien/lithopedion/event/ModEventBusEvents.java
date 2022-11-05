@@ -3,6 +3,7 @@ package com.kalyptien.lithopedion.event;
 import com.kalyptien.lithopedion.Lithopedion;
 import com.kalyptien.lithopedion.entity.ModEntityTypes;
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
+import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
 import com.kalyptien.lithopedion.recipe.PotteryWheelRecipe;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -32,5 +33,6 @@ public class ModEventBusEvents {
     @SubscribeEvent
     public static void entityAttributeEvent(EntityAttributeCreationEvent event) {
         event.put(ModEntityTypes.COE.get(), ChildrenEntity.setAttributes());
+        event.put(ModEntityTypes.SOE.get(), SoldierEntity.setAttributes());
     }
 }

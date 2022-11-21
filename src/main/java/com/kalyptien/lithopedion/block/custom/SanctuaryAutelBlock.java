@@ -1,14 +1,19 @@
 package com.kalyptien.lithopedion.block.custom;
 
-import com.kalyptien.lithopedion.block.ModBlocks;
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
 import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryBlockVariant;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
+import com.kalyptien.lithopedion.item.ModItems;
+import com.kalyptien.lithopedion.variant.SanctuaryBlockVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -19,27 +24,25 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Optional;
 import java.util.Random;
-import java.util.function.Predicate;
 
 import static net.minecraft.core.BlockPos.withinManhattan;
 
 public class SanctuaryAutelBlock extends SanctuaryBlock {
 
-    private ArrayList<SanctuaryBlock> blocks;
-
+    private ArrayList<SanctuaryBlock> blocks = new ArrayList<>();
     private ArrayList<ChildrenEntity> childrens = new ArrayList<>();
-
     private ArrayList<SoldierEntity> soldiers = new ArrayList<>();
 
     private int soulLimiter = 5;
-
+    private int soulCount = 0;
     private int soulCooldown = 24000;
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -53,63 +56,67 @@ public class SanctuaryAutelBlock extends SanctuaryBlock {
     }
 
     @Override
-    public boolean connect(ChildrenEntity children){
+    public void connect(ChildrenEntity children){
         this.childrens.add(children);
-        return true;
+        children.setSanctuary(this);
     }
 
     @Override
-    public boolean connect(SoldierEntity soldier){
-        if(this.soldiers.size() != 0){
-            if(this.blocks.size() / (4 * soldiers.size()) > 1){
-                this.soldiers.add(soldier);
-                updateSoulLimiter();
-                soldier.setSanctuaryVariant(Svariant);
-                // Change head texture
-                return true;
-            }
-            else{
-                return false;
-            }
-        }
-        else{
-            return true;
+    public void connect(SoldierEntity soldier){
+        this.soldiers.add(soldier);
+        if (this.blocks.size() / (4 * soldiers.size()) > 1) {
+            updateSoulLimiter();
+            soldier.setSanctuaryVariant(Svariant);
         }
     }
 
     @Override
-    public boolean connect(SanctuaryBlock block){
+    public void connect(SanctuaryBlock block){
         this.blocks.add(block);
-        block.setActive(true);
         block.setSanctuary(this);
-        // Change texture of the blocks with the variant + type of block
-        return true;
     }
 
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         for(BlockPos blockpos : withinManhattan(pPos, area, area, area)) {
             Block block = pLevel.getBlockState(blockpos).getBlock();
-            if (isValidSanctuaryBlock(block)) {
+            if (this.isValidSanctuaryBlock(block)) {
                 SanctuaryBlock Sblock = (SanctuaryBlock) block;
-                if (canConnectToAutel(Sblock)){
-                    Sblock.connect(Sblock);
+                if (this.canConnectToAutel(Sblock)){
+                    this.connect(Sblock);
                 }
             }
         }
+        this.blocks.remove(this);
     }
 
     @Override
     public void randomTick(BlockState pState, ServerLevel pLevel, BlockPos pPos, Random pRandom) {
-
+        this.soulCooldown--;
+        if(soulCooldown <= 0){
+            this.soulCooldown = 24000 - (24000 * (this.childrens.size() / 100));
+            if(soulCount < soulLimiter){
+                soulCount++;
+            }
+        }
     }
+    @Override
+    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+        this.spawnDestroyParticles(pLevel, pPlayer, pPos, pState);
+        pLevel.gameEvent(pPlayer, GameEvent.BLOCK_DESTROY, pPos);
 
-    public boolean isValidSanctuaryBlock(Block block){
-        return block instanceof SanctuaryBlock;
-    }
+        for (SanctuaryBlock block : this.blocks){
+            block.unsetSanctuary();
+        }
 
-    public boolean canConnectToAutel(SanctuaryBlock block){
-        return block.getSanctuary() == null && block.getSvariant() == this.getSvariant();
+        for (ChildrenEntity children : this.childrens){
+            children.setSanctuary(null);
+        }
+
+        for (SoldierEntity soldier : this.soldiers){
+            soldier.setSanctuaryVariant(SanctuaryVariant.NONE);
+            soldier.setSanctuary(null);
+        }
     }
 
     public void updateSoulLimiter(){
@@ -120,6 +127,40 @@ public class SanctuaryAutelBlock extends SanctuaryBlock {
 
             this.soulLimiter = 5;
         }
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if(!pLevel.isClientSide() && pHand == InteractionHand.MAIN_HAND && this.soulCount > 0) {
+            pPlayer.setItemInHand(pHand, new ItemStack(ModItems.FUNGUS_ELEMENT.get(), this.soulCount));
+            this.soulCount = 0;
+            return InteractionResult.CONSUME;
+        }
+        return InteractionResult.PASS;
+    }
+
+    public ArrayList<SanctuaryBlock> getBlocks() {
+        return blocks;
+    }
+
+    public void setBlocks(ArrayList<SanctuaryBlock> blocks) {
+        this.blocks = blocks;
+    }
+
+    public ArrayList<ChildrenEntity> getChildrens() {
+        return childrens;
+    }
+
+    public void setChildrens(ArrayList<ChildrenEntity> childrens) {
+        this.childrens = childrens;
+    }
+
+    public ArrayList<SoldierEntity> getSoldiers() {
+        return soldiers;
+    }
+
+    public void setSoldiers(ArrayList<SoldierEntity> soldiers) {
+        this.soldiers = soldiers;
     }
 
     @Override

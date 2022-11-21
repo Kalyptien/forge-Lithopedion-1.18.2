@@ -1,8 +1,9 @@
 package com.kalyptien.lithopedion.block;
 
 import com.kalyptien.lithopedion.Lithopedion;
+import com.kalyptien.lithopedion.LithopedionUtil;
 import com.kalyptien.lithopedion.block.custom.*;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryVariant;
 import com.kalyptien.lithopedion.item.ModCreativeModeTab;
 import com.kalyptien.lithopedion.item.ModItems;
 import net.minecraft.world.item.BlockItem;
@@ -78,15 +79,15 @@ public class ModBlocks {
     // ===================================================================================================================== SANCTUARY
 
     public static final RegistryObject<Block> FUNGUS_AUTEL = registerBlock("fungus_autel",
-            () -> new SanctuaryAutelBlock(BlockBehaviour.Properties.copy(Blocks.SPRUCE_WOOD).noOcclusion(), 20, SanctuaryVariant.FUNGUS),
+            () -> new SanctuaryAutelBlock(BlockBehaviour.Properties.copy(Blocks.SPRUCE_WOOD).noOcclusion(), LithopedionUtil.sanctuary_autel_zone, SanctuaryVariant.FUNGUS),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> FUNGUS_STONE = registerBlock("fungus_stone",
-            () -> new SanctuaryStoneBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion(), 10, SanctuaryVariant.FUNGUS),
+            () -> new SanctuaryStoneBlock(BlockBehaviour.Properties.copy(Blocks.STONE).noOcclusion(), LithopedionUtil.sanctuary_stone_zone, SanctuaryVariant.FUNGUS),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     public static final RegistryObject<Block> FUNGUS_STATUS = registerBlock("fungus_status",
-            () -> new SanctuaryStatusBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).noOcclusion(), 10, SanctuaryVariant.FUNGUS),
+            () -> new SanctuaryStatusBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).noOcclusion(), LithopedionUtil.sanctuary_status_zone, SanctuaryVariant.FUNGUS),
             ModCreativeModeTab.LITHOPEDION_TAB);
 
     // ===================================================================================================================== CRAFT
@@ -97,6 +98,8 @@ public class ModBlocks {
     public static final RegistryObject<Block> POTTERY_WHEEL = registerBlock("pottery_wheel",
             () -> new PotteryWheelBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_STONE).noOcclusion()),
             ModCreativeModeTab.LITHOPEDION_TAB);
+
+    // =====================================================================================================================
 
     // =====================================================================================================================
 

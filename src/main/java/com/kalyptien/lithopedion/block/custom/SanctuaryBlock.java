@@ -2,32 +2,40 @@ package com.kalyptien.lithopedion.block.custom;
 
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
 import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryBlockVariant;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryBlockVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryVariant;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
 public abstract class SanctuaryBlock extends Block {
 
-    private SanctuaryBlock sanctuary;
+    private SanctuaryAutelBlock sanctuary;
     public SanctuaryVariant Svariant;
     public int area;
-    public boolean isActive = false;
+
+    public static final BooleanProperty ACTIVED = BooleanProperty.create("actived");
     public SanctuaryBlockVariant SBvariant;
 
     public SanctuaryBlock(Properties pProperties) {
         super(pProperties);
     }
 
-    public boolean connect(ChildrenEntity children){
-        return true;
+    public void connect(ChildrenEntity children){
+        if(this.sanctuary != null){
+            this.sanctuary.connect(children);
+        }
     }
 
-    public boolean connect(SoldierEntity soldier){
-        return true;
+    public void connect(SoldierEntity soldier){
+        if(this.sanctuary != null){
+            this.sanctuary.connect(soldier);
+        }
     }
 
-    public boolean connect(SanctuaryBlock block){
-        return true;
+    public void connect(SanctuaryBlock block){
+        if(this.sanctuary != null){
+            this.sanctuary.connect(block);
+        }
     }
 
     public SanctuaryVariant getSvariant() {
@@ -46,19 +54,27 @@ public abstract class SanctuaryBlock extends Block {
         this.area = area;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public boolean isValidSanctuaryBlock(Block block){
+        return block instanceof SanctuaryBlock;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public boolean canConnectToAutel(SanctuaryBlock block){
+        return block.getSanctuary() == null && block.getSvariant() == this.getSvariant();
     }
 
-    public SanctuaryBlock getSanctuary() {
+    public boolean isConnectToAutel(SanctuaryBlock block){
+        return block.getSanctuary() != null && block.getSvariant() == this.getSvariant();
+    }
+
+    public SanctuaryAutelBlock getSanctuary() {
         return sanctuary;
     }
 
-    public void setSanctuary(SanctuaryBlock sanctuary) {
+    public void setSanctuary(SanctuaryAutelBlock sanctuary) {
         this.sanctuary = sanctuary;
+    }
+
+    public void unsetSanctuary() {
+        this.sanctuary = null;
     }
 }

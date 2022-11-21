@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"facing=north": { "model": "lithopedion:block/fongus_stone" },
-		"facing=east": { "model": "lithopedion:block/fongus_stone", "y": 90 },
-		"facing=south": { "model": "lithopedion:block/fongus_stone", "y": 180 },
-		"facing=west": { "model": "lithopedion:block/fongus_stone", "y": 270 }
-	}
-}

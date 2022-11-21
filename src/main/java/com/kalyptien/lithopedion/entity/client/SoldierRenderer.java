@@ -4,7 +4,7 @@ import com.google.common.collect.Maps;
 import com.kalyptien.lithopedion.Lithopedion;
 import com.kalyptien.lithopedion.entity.client.layer.SoldierHeadLayer;
 import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
-import com.kalyptien.lithopedion.entity.variant.SoldierVariant;
+import com.kalyptien.lithopedion.variant.SoldierVariant;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.Util;

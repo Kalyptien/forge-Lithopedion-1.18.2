@@ -1,7 +1,11 @@
 package com.kalyptien.lithopedion.entity.custom;
 
+import com.kalyptien.lithopedion.block.custom.SanctuaryAutelBlock;
+import com.kalyptien.lithopedion.entity.ai.ChildrenFloatGoal;
+import com.kalyptien.lithopedion.entity.ai.ChildrenPrayGoal;
 import com.kalyptien.lithopedion.entity.ai.ChildrenSitGoal;
-import com.kalyptien.lithopedion.entity.variant.ChildrenVariant;
+import com.kalyptien.lithopedion.variant.ChildrenHarvestVariant;
+import com.kalyptien.lithopedion.variant.ChildrenVariant;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,23 +38,24 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class ChildrenEntity extends Animal implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
 
     private static final EntityDataAccessor<Integer> TYPE_VARIANT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> TYPE_HARVEST = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> FABRIC_AMOUNT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> WOOD_AMOUNT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> STONE_AMOUNT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDataAccessor<Boolean> MOVING = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.BOOLEAN);
-
+    private static final EntityDataAccessor<Integer> RESSOURCE_AMOUNT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
 
     private static final UUID SPEED_MODIFIER_SITTING_UUID = UUID.fromString("2EF64346-9E56-44E9-9574-1BF9FD6443CF");
     private static final AttributeModifier SPEED_MODIFIER_SITTING = new AttributeModifier(SPEED_MODIFIER_SITTING_UUID, "Sitting speed reduction", -0.75D, AttributeModifier.Operation.MULTIPLY_BASE);
+    private SanctuaryAutelBlock sanctuary;
+    private boolean sitting;
+    private boolean moving;
+    private boolean praying;
 
+    private ChildrenHarvestVariant harvest_type = ChildrenHarvestVariant.NONE;
 
     public ChildrenEntity(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -61,17 +66,18 @@ public class ChildrenEntity extends Animal implements IAnimatable {
                 .add(Attributes.MAX_HEALTH, 3.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.2f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.1f).build();
     }
 
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(0, new ChildrenFloatGoal(this));
         this.goalSelector.addGoal(1, new ChildrenSitGoal(this));
-        this.goalSelector.addGoal(2, new PanicGoal(this, 1.25D));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(6, (new HurtByTargetGoal(this)).setAlertOthers());
+        this.goalSelector.addGoal(2, new ChildrenPrayGoal(this));
+        this.goalSelector.addGoal(3, new PanicGoal(this, 1.25D));
+        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(7, (new HurtByTargetGoal(this)).setAlertOthers());
     }
 
     @Nullable
@@ -89,17 +95,10 @@ public class ChildrenEntity extends Animal implements IAnimatable {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.sit", false));
             return PlayState.CONTINUE;
         }
-        /*else if(this.getHarvestType() != 0){
-            if (this.getHarvestType() == ChildrenHarvestVariant.FABRIC.getId()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.harvest_fabric", true));
-            } else if (this.getHarvestType() == ChildrenHarvestVariant.WOOD.getId()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.harvest_wood", true));
-            } else if (this.getHarvestType() == ChildrenHarvestVariant.STONE.getId()){
-                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.harvest_stone", true));
-            }
-
+        else if(this.isPraying()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.pray", false));
             return PlayState.CONTINUE;
-        }*/
+        }
 
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.idle", true));
         return PlayState.CONTINUE;
@@ -111,58 +110,50 @@ public class ChildrenEntity extends Animal implements IAnimatable {
                 0, this::predicate));
     }
 
+    /* DATA */
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(TYPE_VARIANT, 0);
-        this.entityData.define(FABRIC_AMOUNT, 0);
-        this.entityData.define(WOOD_AMOUNT, 0);
-        this.entityData.define(STONE_AMOUNT, 0);
-        this.entityData.define(TYPE_HARVEST, 0);
-        this.entityData.define(SITTING, false);
-        this.entityData.define(MOVING, false);
+        this.entityData.define(RESSOURCE_AMOUNT, 0);
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("Variant", this.getTypeVariant());
-        tag.putInt("Fabric", this.getFabric());
-        tag.putInt("Wood", this.getWood());
-        tag.putInt("Stone", this.getStone());
-        tag.putInt("HarvestType", this.getHarvestType());
-        tag.putBoolean("Sitting", this.isSitting());
-        tag.putBoolean("Moving", this.isMoving());
+        tag.putInt("Ressource", this.getRessource());
 
     }
 
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.entityData.set(TYPE_VARIANT, tag.getInt("Variant"));
-
-        this.entityData.set(FABRIC_AMOUNT, tag.getInt("Fabric"));
-        this.entityData.set(WOOD_AMOUNT, tag.getInt("Wood"));
-        this.entityData.set(STONE_AMOUNT, tag.getInt("Stone"));
-
-        this.entityData.set(TYPE_HARVEST, tag.getInt("HarvestType"));
-
-        this.setSitting(tag.getBoolean("Sitting"));
-        this.setMoving(tag.getBoolean("Moving"));
+        this.setRessource(tag.getInt("Ressource"));
     }
 
-    @Override
-    public AnimationFactory getFactory() {
-        return this.factory;
-    }
-
-    /* GOAL */
-
+    /* GETTER */
     public boolean isSitting() {
-        return this.entityData.get(SITTING);
+        return this.sitting;
+    }
+    public boolean isMoving() {
+        return this.moving;
+    }
+    public boolean isPraying() {
+        return this.praying;
+    }
+    public boolean isConnect(){
+        return this.sanctuary != null;
+    }
+    public int getRessource(){return this.entityData.get(RESSOURCE_AMOUNT);}
+    public ChildrenHarvestVariant getHarvestType(){ return this.harvest_type;}
+    public SanctuaryAutelBlock getSanctuary() {
+        return sanctuary;
     }
 
+    /* SETTER */
     public void setSitting(boolean sitting) {
-        this.entityData.set(SITTING, sitting);
+        this.sitting = sitting;
         AttributeInstance modifiableattributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (modifiableattributeinstance.getModifier(SPEED_MODIFIER_SITTING_UUID) != null) {
             modifiableattributeinstance.removeModifier(SPEED_MODIFIER_SITTING);
@@ -172,25 +163,22 @@ public class ChildrenEntity extends Animal implements IAnimatable {
             modifiableattributeinstance.addTransientModifier(SPEED_MODIFIER_SITTING);
         }
     }
-
-    public boolean isMoving() {
-        return this.entityData.get(MOVING);
-    }
-
     public void setMoving(boolean moving) {
-        this.entityData.set(MOVING, moving);
+        this.moving = moving;
     }
-    public int getFabric(){return this.entityData.get(FABRIC_AMOUNT);}
-    public int getWood(){return this.entityData.get(WOOD_AMOUNT);}
-    public int getStone(){return this.entityData.get(STONE_AMOUNT);}
+    public void setPraying(boolean praying) {
+        this.praying = praying;
+    }
+    public void setRessource(int amount){this.entityData.set(RESSOURCE_AMOUNT, amount);}
+    public void setHarvestType(int id){ this.harvest_type = ChildrenHarvestVariant.byId(id);}
+    public void setSanctuary(SanctuaryAutelBlock sanctuary) {
+        this.sanctuary = sanctuary;
+    }
 
-    public void setFabric(int amount){this.entityData.set(FABRIC_AMOUNT, amount);}
-    public void setWood(int amount){this.entityData.set(WOOD_AMOUNT, amount);}
-    public void setStone(int amount){this.entityData.set(STONE_AMOUNT, amount);}
-
-    public int getHarvestType(){ return this.entityData.get(TYPE_HARVEST);}
-
-    public void setHarvestType(int id){ this.entityData.set(TYPE_HARVEST, id);}
+    @Override
+    public AnimationFactory getFactory() {
+        return this.factory;
+    }
 
     /* SOUND */
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
@@ -232,5 +220,27 @@ public class ChildrenEntity extends Animal implements IAnimatable {
 
     private void setVariant(ChildrenVariant variant) {
         this.entityData.set(TYPE_VARIANT, variant.getId() & 255);
+    }
+
+    /* OTHER */
+
+    public Optional<BlockPos> findNearestBlock(Predicate<BlockState> pPredicate, double pDistance) {
+        BlockPos blockpos = this.blockPosition();
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+
+        for(int i = 0; (double)i <= pDistance; i = i > 0 ? -i : 1 - i) {
+            for(int j = 0; (double)j < pDistance; ++j) {
+                for(int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
+                    for(int l = k < j && k > -j ? j : 0; l <= j; l = l > 0 ? -l : 1 - l) {
+                        blockpos$mutableblockpos.setWithOffset(blockpos, k, i - 1, l);
+                        if (blockpos.closerThan(blockpos$mutableblockpos, pDistance) && pPredicate.test(this.level.getBlockState(blockpos$mutableblockpos))) {
+                            return Optional.of(blockpos$mutableblockpos);
+                        }
+                    }
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 }

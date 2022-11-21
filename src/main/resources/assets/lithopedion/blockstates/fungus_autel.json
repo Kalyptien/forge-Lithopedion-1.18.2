@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "lithopedion:block/fungus_autel" },
+		"facing=east": { "model": "lithopedion:block/fungus_autel", "y": 90 },
+		"facing=south": { "model": "lithopedion:block/fungus_autel", "y": 180 },
+		"facing=west": { "model": "lithopedion:block/fungus_autel", "y": 270 }
+	}
+}

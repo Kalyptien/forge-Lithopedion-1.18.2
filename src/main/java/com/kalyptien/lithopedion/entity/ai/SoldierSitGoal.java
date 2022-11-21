@@ -35,7 +35,7 @@ public class SoldierSitGoal extends Goal {
 
     @Override
     public void start() {
-        this.sitTimer = 500 + this.soldier.getRandom().nextInt(1000);
+        this.sitTimer = 1000 + this.soldier.getRandom().nextInt(1000);
         this.soldier.setSitting(true);
     }
 

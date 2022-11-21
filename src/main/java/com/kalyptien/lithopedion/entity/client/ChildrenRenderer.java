@@ -3,7 +3,7 @@ package com.kalyptien.lithopedion.entity.client;
 import com.google.common.collect.Maps;
 import com.kalyptien.lithopedion.Lithopedion;
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
-import com.kalyptien.lithopedion.entity.variant.ChildrenVariant;
+import com.kalyptien.lithopedion.variant.ChildrenVariant;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;

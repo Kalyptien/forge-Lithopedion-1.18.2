@@ -1,9 +1,10 @@
 package com.kalyptien.lithopedion.entity.custom;
 
+import com.kalyptien.lithopedion.block.custom.SanctuaryAutelBlock;
 import com.kalyptien.lithopedion.entity.ai.SoldierFloatGoal;
 import com.kalyptien.lithopedion.entity.ai.SoldierSitGoal;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
-import com.kalyptien.lithopedion.entity.variant.SoldierVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryVariant;
+import com.kalyptien.lithopedion.variant.SoldierVariant;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -24,7 +25,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
@@ -42,7 +42,9 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class SoldierEntity extends Animal implements IAnimatable {
     private AnimationFactory factory = new AnimationFactory(this);
@@ -56,17 +58,17 @@ public class SoldierEntity extends Animal implements IAnimatable {
     private static final UUID SPEED_MODIFIER_SITTING_UUID = UUID.fromString("2EF64346-9E56-44E9-9574-1BF9FD6443CF");
     private static final AttributeModifier SPEED_MODIFIER_SITTING = new AttributeModifier(SPEED_MODIFIER_SITTING_UUID, "Sitting speed reduction", -0.75D, AttributeModifier.Operation.MULTIPLY_BASE);
 
-
+    private SanctuaryAutelBlock sanctuary;
     public SoldierEntity(EntityType<? extends Animal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
     public static AttributeSupplier setAttributes() {
         return Animal.createMobAttributes()
-                .add(Attributes.MAX_HEALTH, 3.0D)
+                .add(Attributes.MAX_HEALTH, 15.0D)
                 .add(Attributes.ATTACK_DAMAGE, 1.0f)
                 .add(Attributes.ATTACK_SPEED, 1.0f)
-                .add(Attributes.MOVEMENT_SPEED, 0.1f).build();
+                .add(Attributes.MOVEMENT_SPEED, 0.15f).build();
     }
 
     protected void registerGoals() {
@@ -161,6 +163,19 @@ public class SoldierEntity extends Animal implements IAnimatable {
         this.entityData.set(MOVING, moving);
     }
 
+    public boolean isConnect(){
+        return this.sanctuary != null;
+    }
+
+    public SanctuaryAutelBlock getSanctuary() {
+        return sanctuary;
+    }
+
+
+    public void setSanctuary(SanctuaryAutelBlock sanctuary) {
+        this.sanctuary = sanctuary;
+    }
+
     /* SOUND */
 
     protected void playStepSound(BlockPos pos, BlockState blockIn) {
@@ -214,5 +229,25 @@ public class SoldierEntity extends Animal implements IAnimatable {
 
     public void setSanctuaryVariant(SanctuaryVariant variant) {
         this.entityData.set(SANCTUARY_VARIANT, variant.getId() & 255);
+    }
+
+    public Optional<BlockPos> findNearestBlock(Predicate<BlockState> pPredicate, double pDistance) {
+        BlockPos blockpos = this.blockPosition();
+        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
+
+        for(int i = 0; (double)i <= pDistance; i = i > 0 ? -i : 1 - i) {
+            for(int j = 0; (double)j < pDistance; ++j) {
+                for(int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
+                    for(int l = k < j && k > -j ? j : 0; l <= j; l = l > 0 ? -l : 1 - l) {
+                        blockpos$mutableblockpos.setWithOffset(blockpos, k, i - 1, l);
+                        if (blockpos.closerThan(blockpos$mutableblockpos, pDistance) && pPredicate.test(this.level.getBlockState(blockpos$mutableblockpos))) {
+                            return Optional.of(blockpos$mutableblockpos);
+                        }
+                    }
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 }

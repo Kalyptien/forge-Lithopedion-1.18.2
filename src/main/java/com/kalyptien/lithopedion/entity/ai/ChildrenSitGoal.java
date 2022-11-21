@@ -8,8 +8,8 @@ public class ChildrenSitGoal extends Goal {
     private int sitTimer;
     private int cooldown;
 
-    public ChildrenSitGoal(ChildrenEntity childrenIn) {
-        this.children = childrenIn;
+    public ChildrenSitGoal(ChildrenEntity pMob) {
+        this.children = pMob;
     }
 
     @Override

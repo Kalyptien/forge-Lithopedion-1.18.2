@@ -1,0 +1,18 @@
+{
+	"variants": {
+		"facing=north,jade_process=0": { "model": "lithopedion:block/fungus_status" },
+		"facing=east,jade_process=0": { "model": "lithopedion:block/fungus_status", "y": 90 },
+		"facing=south,jade_process=0": { "model": "lithopedion:block/fungus_status", "y": 180 },
+		"facing=west,jade_process=0": { "model": "lithopedion:block/fungus_status", "y": 270 },
+
+		"facing=north,jade_process=1": { "model": "lithopedion:block/fungus_status_jade" },
+		"facing=east,jade_process=1": { "model": "lithopedion:block/fungus_status_jade", "y": 90 },
+		"facing=south,jade_process=1": { "model": "lithopedion:block/fungus_status_jade", "y": 180 },
+		"facing=west,jade_process=1": { "model": "lithopedion:block/fungus_status_jade", "y": 270 },
+
+		"facing=north,jade_process=2": { "model": "lithopedion:block/fungus_status_infused_jade" },
+		"facing=east,jade_process=2": { "model": "lithopedion:block/fungus_status_infused_jade", "y": 90 },
+		"facing=south,jade_process=2": { "model": "lithopedion:block/fungus_status_infused_jade", "y": 180 },
+		"facing=west,jade_process=2": { "model": "lithopedion:block/fungus_status_infused_jade", "y": 270 }
+	}
+}

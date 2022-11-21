@@ -1,9 +1,7 @@
 package com.kalyptien.lithopedion.block.custom;
 
-import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
-import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryBlockVariant;
-import com.kalyptien.lithopedion.entity.variant.SanctuaryVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryBlockVariant;
+import com.kalyptien.lithopedion.variant.SanctuaryVariant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +19,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+
+import static net.minecraft.core.BlockPos.withinManhattan;
 
 public class SanctuaryStoneBlock extends SanctuaryBlock {
 
@@ -37,6 +36,18 @@ public class SanctuaryStoneBlock extends SanctuaryBlock {
 
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        for(BlockPos blockpos : withinManhattan(pPos, area, area, area)) {
+            Block block = pLevel.getBlockState(blockpos).getBlock();
+            if (this.isValidSanctuaryBlock(block)) {
+                SanctuaryBlock Sblock = (SanctuaryBlock) block;
+                if (this.isConnectToAutel(Sblock)){
+                    Sblock.connect(this);
+                }
+                else if(Sblock instanceof SanctuaryAutelBlock){
+                    Sblock.connect(this);
+                }
+            }
+        }
     }
 
     @Override

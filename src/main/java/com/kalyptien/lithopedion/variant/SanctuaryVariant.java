@@ -1,4 +1,4 @@
-package com.kalyptien.lithopedion.entity.variant;
+package com.kalyptien.lithopedion.variant;
 
         import java.util.Arrays;
         import java.util.Comparator;

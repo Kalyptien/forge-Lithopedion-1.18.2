@@ -18,18 +18,18 @@ public class PotteryStaffItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack itemstack = pPlayer.getItemInHand(pUsedHand);
-        if(itemstack.getDescriptionId().equals("item.lithopedion.pottery_staff_fast")){
+        Item item = pPlayer.getItemInHand(pUsedHand).getItem();
+        if(item == ModItems.POTTERY_STAFF_FAST.get()){
             pPlayer.setItemInHand(pUsedHand, new ItemStack(ModItems.POTTERY_STAFF_MEDIUM.get(), 1));
         }
-        else if(itemstack.getDescriptionId().equals("item.lithopedion.pottery_staff_medium")){
+        else if(item == ModItems.POTTERY_STAFF_MEDIUM.get()){
             pPlayer.setItemInHand(pUsedHand, new ItemStack(ModItems.POTTERY_STAFF_SLOW.get(), 1));
         }
-        else if(itemstack.getDescriptionId().equals("item.lithopedion.pottery_staff_slow")){
+        else if(item == ModItems.POTTERY_STAFF_SLOW.get()){
             pPlayer.setItemInHand(pUsedHand, new ItemStack(ModItems.POTTERY_STAFF_FAST.get(), 1));
         }
         else{
-            System.out.println(itemstack.getDescriptionId());
+            throw new IllegalArgumentException("Invalid pottery_staff type");
         }
         return super.use(pLevel, pPlayer, pUsedHand);
     }

@@ -113,14 +113,4 @@ public class ChildrenFloatGoal extends FloatGoal {
         }
     }
 
-    @Override
-    public void start() {
-        this.children.setMoving(true);
-    }
-
-    @Override
-    public void stop() {
-        this.children.setMoving(false);
-    }
-
 }

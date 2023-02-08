@@ -1,5 +1,7 @@
 package com.kalyptien.lithopedion.block.custom;
 
+import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
+import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
 import com.kalyptien.lithopedion.variant.SanctuaryBlockVariant;
 import com.kalyptien.lithopedion.variant.SanctuaryVariant;
 import com.kalyptien.lithopedion.item.ModItems;
@@ -22,9 +24,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -35,7 +39,7 @@ public class SanctuaryStatusBlock extends SanctuaryBlock {
     public static final IntegerProperty JADE_PROCESS = IntegerProperty.create("jade_process", 0, 2);
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 17, 16);
 
     public SanctuaryStatusBlock(Properties properties, int area, SanctuaryVariant Svariant){
         super(properties);
@@ -50,11 +54,15 @@ public class SanctuaryStatusBlock extends SanctuaryBlock {
             Block block = pLevel.getBlockState(blockpos).getBlock();
             if (this.isValidSanctuaryBlock(block)) {
                 SanctuaryBlock Sblock = (SanctuaryBlock) block;
-                if (this.isConnectToAutel(Sblock)){
+                if(Sblock instanceof SanctuaryAutelBlock){
                     Sblock.connect(this);
+                    this.setSanctuary((SanctuaryAutelBlock) Sblock);
+                    break;
                 }
-                else if(Sblock instanceof SanctuaryAutelBlock){
+                else if (this.isConnectToAutel(Sblock)){
                     Sblock.connect(this);
+                    this.setSanctuary(Sblock.getSanctuary());
+                    break;
                 }
             }
         }
@@ -85,6 +93,19 @@ public class SanctuaryStatusBlock extends SanctuaryBlock {
         }
 
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
+        this.spawnDestroyParticles(pLevel, pPlayer, pPos, pState);
+    }
+
+    public void setJadeProcess(BlockState pState, int value){
+        pState.setValue(JADE_PROCESS, value);
+    }
+
+    public int getJadeProcess(BlockState pState){
+        return pState.getValue(JADE_PROCESS);
     }
 
 

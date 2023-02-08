@@ -1,0 +1,6 @@
+{
+  "parent": "block/button",
+  "textures": {
+    "texture": "lithopedion:block/petrified_planks"
+  }
+}

@@ -47,14 +47,13 @@ public class ChildrenEntity extends Animal implements IAnimatable {
 
     private static final EntityDataAccessor<Integer> TYPE_VARIANT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> RESSOURCE_AMOUNT = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> MOVING = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> PRAYING = SynchedEntityData.defineId(ChildrenEntity.class, EntityDataSerializers.BOOLEAN);
 
     private static final UUID SPEED_MODIFIER_SITTING_UUID = UUID.fromString("2EF64346-9E56-44E9-9574-1BF9FD6443CF");
     private static final AttributeModifier SPEED_MODIFIER_SITTING = new AttributeModifier(SPEED_MODIFIER_SITTING_UUID, "Sitting speed reduction", -0.75D, AttributeModifier.Operation.MULTIPLY_BASE);
-    private SanctuaryAutelBlock sanctuary;
-    private boolean sitting;
-    private boolean moving;
-    private boolean praying;
-
+    private SanctuaryAutelBlock sanctuary = null;
     private ChildrenHarvestVariant harvest_type = ChildrenHarvestVariant.NONE;
 
     public ChildrenEntity(EntityType<? extends Animal> pEntityType, Level pLevel) {
@@ -72,7 +71,7 @@ public class ChildrenEntity extends Animal implements IAnimatable {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new ChildrenFloatGoal(this));
         this.goalSelector.addGoal(1, new ChildrenSitGoal(this));
-        this.goalSelector.addGoal(2, new ChildrenPrayGoal(this));
+        this.goalSelector.addGoal(2, new ChildrenPrayGoal(this,1.0D, 24));
         this.goalSelector.addGoal(3, new PanicGoal(this, 1.25D));
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.0D));
@@ -96,7 +95,7 @@ public class ChildrenEntity extends Animal implements IAnimatable {
             return PlayState.CONTINUE;
         }
         else if(this.isPraying()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.pray", false));
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.coe.pray", true));
             return PlayState.CONTINUE;
         }
 
@@ -116,6 +115,9 @@ public class ChildrenEntity extends Animal implements IAnimatable {
         super.defineSynchedData();
         this.entityData.define(TYPE_VARIANT, 0);
         this.entityData.define(RESSOURCE_AMOUNT, 0);
+        this.entityData.define(SITTING, false);
+        this.entityData.define(MOVING, false);
+        this.entityData.define(PRAYING, false);
     }
 
     @Override
@@ -123,6 +125,9 @@ public class ChildrenEntity extends Animal implements IAnimatable {
         super.addAdditionalSaveData(tag);
         tag.putInt("Variant", this.getTypeVariant());
         tag.putInt("Ressource", this.getRessource());
+        tag.putBoolean("Sitting", this.isSitting());
+        tag.putBoolean("Moving", this.isMoving());
+        tag.putBoolean("Praying", this.isPraying());
 
     }
 
@@ -130,17 +135,38 @@ public class ChildrenEntity extends Animal implements IAnimatable {
         super.readAdditionalSaveData(tag);
         this.entityData.set(TYPE_VARIANT, tag.getInt("Variant"));
         this.setRessource(tag.getInt("Ressource"));
+        this.setSitting(tag.getBoolean("Sitting"));
+        this.setMoving(tag.getBoolean("Moving"));
+        this.setPraying(tag.getBoolean("Praying"));
     }
 
-    /* GETTER */
     public boolean isSitting() {
-        return this.sitting;
+        return this.entityData.get(SITTING);
     }
+
+    public void setSitting(boolean sitting) {
+        this.entityData.set(SITTING, sitting);
+        AttributeInstance modifiableattributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (modifiableattributeinstance.getModifier(SPEED_MODIFIER_SITTING_UUID) != null) {
+            modifiableattributeinstance.removeModifier(SPEED_MODIFIER_SITTING);
+        }
+        if (sitting) {
+            modifiableattributeinstance.addTransientModifier(SPEED_MODIFIER_SITTING);
+        }
+    }
+
     public boolean isMoving() {
-        return this.moving;
+        return this.entityData.get(MOVING);
     }
-    public boolean isPraying() {
-        return this.praying;
+    public void setMoving(boolean moving) {
+        this.entityData.set(MOVING, moving);
+    }
+
+    public boolean isPraying(){
+        return this.entityData.get(PRAYING);
+    }
+    public void setPraying(boolean praying) {
+        this.entityData.set(PRAYING, praying);
     }
     public boolean isConnect(){
         return this.sanctuary != null;
@@ -151,24 +177,6 @@ public class ChildrenEntity extends Animal implements IAnimatable {
         return sanctuary;
     }
 
-    /* SETTER */
-    public void setSitting(boolean sitting) {
-        this.sitting = sitting;
-        AttributeInstance modifiableattributeinstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (modifiableattributeinstance.getModifier(SPEED_MODIFIER_SITTING_UUID) != null) {
-            modifiableattributeinstance.removeModifier(SPEED_MODIFIER_SITTING);
-        }
-
-        if (sitting) {
-            modifiableattributeinstance.addTransientModifier(SPEED_MODIFIER_SITTING);
-        }
-    }
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-    public void setPraying(boolean praying) {
-        this.praying = praying;
-    }
     public void setRessource(int amount){this.entityData.set(RESSOURCE_AMOUNT, amount);}
     public void setHarvestType(int id){ this.harvest_type = ChildrenHarvestVariant.byId(id);}
     public void setSanctuary(SanctuaryAutelBlock sanctuary) {

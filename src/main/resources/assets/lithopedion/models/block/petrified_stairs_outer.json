@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "lithopedion:block/petrified_planks",
+    "top": "lithopedion:block/petrified_planks",
+    "side": "lithopedion:block/petrified_planks"
+  }
+}

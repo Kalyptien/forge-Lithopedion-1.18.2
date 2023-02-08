@@ -33,5 +33,31 @@
   "block.lithopedion.earth_furnace": "Earth's Furnace",
   "block.lithopedion.pottery_wheel": "Pottery Wheel",
 
+  "effect.lithopedion.thoot_rattle": "Thooth Rattle",
+  "effect.lithopedion.fracture": "Fracture",
+
+  "item.lithopedion.petrified_wheat": "Petrified Wheat",
+  "item.lithopedion.petrified_potato": "Petrified Potato",
+  "item.lithopedion.petrified_carrot": "Petrified Carrot",
+  "item.lithopedion.petrified_bread": "Petrified Bread",
+  "item.lithopedion.petrified_seeds": "Petrified Seeds",
+
+  "block.lithopedion.petrified_wheat_plant": "Petrified Wheat Plant",
+
+  "block.lithopedion.petrified_button": "petrified Button",
+  "block.lithopedion.petrified_pressure_plate": "petrified Pressure Plate",
+  "block.lithopedion.petrified_door": "petrified Door",
+  "block.lithopedion.petrified_trapdoor": "petrified Trapdoor",
+  "block.lithopedion.petrified_slab": "petrified Slab",
+  "block.lithopedion.petrified_stairs": "petrified Stairs",
+  "block.lithopedion.petrified_fence": "petrified Fence",
+  "block.lithopedion.petrified_wall": "petrified Wall",
+  "block.lithopedion.petrified_fence_gate": "petrified Fence Gate",
+  "block.lithopedion.petrified_log": "petrified Log",
+  "block.lithopedion.petrified_planks": "petrified Planks",
+  "block.lithopedion.petrified_wood": "petrified Wood",
+  "block.lithopedion.stripped_petrified_log": "Stripped petrified Log",
+  "block.lithopedion.stripped_petrified_wood": "Stripped petrified Wood",
+
   "itemGroup.lithopediontab": "Lithopedion Mod"
 }

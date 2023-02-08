@@ -28,6 +28,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class SanctuaryAutelBlock extends SanctuaryBlock {
     private int soulCooldown = 24000;
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 24, 16);
 
     public SanctuaryAutelBlock(Properties properties, int area, SanctuaryVariant Svariant){
         super(properties);
@@ -58,7 +59,6 @@ public class SanctuaryAutelBlock extends SanctuaryBlock {
     @Override
     public void connect(ChildrenEntity children){
         this.childrens.add(children);
-        children.setSanctuary(this);
     }
 
     @Override
@@ -66,14 +66,12 @@ public class SanctuaryAutelBlock extends SanctuaryBlock {
         this.soldiers.add(soldier);
         if (this.blocks.size() / (4 * soldiers.size()) > 1) {
             updateSoulLimiter();
-            soldier.setSanctuaryVariant(Svariant);
         }
     }
 
     @Override
     public void connect(SanctuaryBlock block){
         this.blocks.add(block);
-        block.setSanctuary(this);
     }
 
     @Override

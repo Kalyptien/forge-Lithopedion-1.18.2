@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "lithopedion:petrified_log",
+    "lithopedion:petrified_wood",
+    "lithopedion:stripped_petrified_log",
+    "lithopedion:stripped_petrified_wood"
+  ]
+}

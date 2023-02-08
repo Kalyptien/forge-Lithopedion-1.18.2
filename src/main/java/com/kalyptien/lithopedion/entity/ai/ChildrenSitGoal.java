@@ -19,7 +19,7 @@ public class ChildrenSitGoal extends Goal {
             return false;
         } else if (this.children.isSitting()) {
             return true;
-        } else if (this.children.isPassenger() || !this.children.isOnGround() || this.children.isInWater()) {
+        } else if (this.children.isPassenger() || !this.children.isOnGround() || this.children.isInWater() || this.children.isPraying() || this.children.isMoving()) {
             return false;
         } else if (this.children.xxa != 0.0F || this.children.yya != 0.0F || this.children.zza != 0.0F) {
             return false;
@@ -50,7 +50,7 @@ public class ChildrenSitGoal extends Goal {
 
     @Override
     public void stop() {
-        this.cooldown = this.adjustedTickDelay(100);
+        this.cooldown = this.adjustedTickDelay(200);
         this.children.setSitting(false);
     }
 

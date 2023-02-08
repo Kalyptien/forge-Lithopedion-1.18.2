@@ -18,7 +18,7 @@ public class SoldierFloatGoal extends FloatGoal {
 
     private SoldierEntity soldier = null;
 
-    private double soldierWatchDMultiplier = 1.5;
+    private final double soldierWatchDMultiplier = 1.1;
 
     private final Predicate<BlockState> VALID_STATUS_BLOCKS = (p_28074_) -> {
         if(this.soldier != null && this.soldier.getSanctuary() != null) {
@@ -113,7 +113,10 @@ public class SoldierFloatGoal extends FloatGoal {
             }
         }
         else{
-            return super.canUse();
+            if(this.soldier.isPraying() || this.soldier.isSitting()){
+                return false;
+            }
+            else return super.canUse();
         }
     }
 

@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +26,7 @@ import static net.minecraft.core.BlockPos.withinManhattan;
 public class SanctuaryStoneBlock extends SanctuaryBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 16, 16);
+    private static final VoxelShape SHAPE =  Block.box(0, 0, 0, 16, 17, 16);
 
     public SanctuaryStoneBlock(Properties properties, int area, SanctuaryVariant Svariant){
         super(properties);
@@ -40,11 +41,15 @@ public class SanctuaryStoneBlock extends SanctuaryBlock {
             Block block = pLevel.getBlockState(blockpos).getBlock();
             if (this.isValidSanctuaryBlock(block)) {
                 SanctuaryBlock Sblock = (SanctuaryBlock) block;
-                if (this.isConnectToAutel(Sblock)){
+                if(Sblock instanceof SanctuaryAutelBlock){
                     Sblock.connect(this);
+                    this.setSanctuary((SanctuaryAutelBlock) Sblock);
+                    break;
                 }
-                else if(Sblock instanceof SanctuaryAutelBlock){
+                else if (this.isConnectToAutel(Sblock)){
                     Sblock.connect(this);
+                    this.setSanctuary(Sblock.getSanctuary());
+                    break;
                 }
             }
         }

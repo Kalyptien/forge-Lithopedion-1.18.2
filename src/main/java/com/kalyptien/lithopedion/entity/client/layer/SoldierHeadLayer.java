@@ -24,12 +24,19 @@ public class SoldierHeadLayer extends GeoLayerRenderer<SoldierEntity> {
     @Override
     public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, SoldierEntity soldier, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 
-            RenderType eyesTexture = RenderType.entityTranslucent(new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/soe/layer/" + soldier.getVariant().toString().toLowerCase() + ".png"));
+        RenderType headTexture = RenderType.entityTranslucent(new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/soe/layer/" + soldier.getSanctuaryVariant().toString().toLowerCase() + ".png"));
 
-            matrixStackIn.pushPose();
+        if(soldier.isConnect()){
+            headTexture = RenderType.entityTranslucent(new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/soe/layer/" + soldier.getSanctuaryVariant().toString().toLowerCase() + ".png"));
+        }
+        else {
+            headTexture = RenderType.entityTranslucent(new ResourceLocation(Lithopedion.MOD_ID, "textures/entity/soe/layer/" + soldier.getVariant().toString().toLowerCase() + ".png"));
+        }
 
-            this.getRenderer().render(this.getEntityModel().getModel(MODEL), soldier, partialTicks, eyesTexture, matrixStackIn, bufferIn, bufferIn.getBuffer(eyesTexture), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+        matrixStackIn.pushPose();
 
-            matrixStackIn.popPose();
+        this.getRenderer().render(this.getEntityModel().getModel(MODEL), soldier, partialTicks, headTexture, matrixStackIn, bufferIn, bufferIn.getBuffer(headTexture), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+
+        matrixStackIn.popPose();
     }
 }

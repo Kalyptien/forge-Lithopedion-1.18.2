@@ -2,6 +2,7 @@ package com.kalyptien.lithopedion.entity.custom;
 
 import com.kalyptien.lithopedion.block.custom.SanctuaryAutelBlock;
 import com.kalyptien.lithopedion.entity.ai.SoldierFloatGoal;
+import com.kalyptien.lithopedion.entity.ai.SoldierPrayGoal;
 import com.kalyptien.lithopedion.entity.ai.SoldierSitGoal;
 import com.kalyptien.lithopedion.variant.SanctuaryVariant;
 import com.kalyptien.lithopedion.variant.SoldierVariant;
@@ -53,8 +54,7 @@ public class SoldierEntity extends Animal implements IAnimatable {
     private static final EntityDataAccessor<Integer> SANCTUARY_VARIANT = SynchedEntityData.defineId(SoldierEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Boolean> SITTING = SynchedEntityData.defineId(SoldierEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> MOVING = SynchedEntityData.defineId(SoldierEntity.class, EntityDataSerializers.BOOLEAN);
-
-
+    private static final EntityDataAccessor<Boolean> PRAYING = SynchedEntityData.defineId(SoldierEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UUID SPEED_MODIFIER_SITTING_UUID = UUID.fromString("2EF64346-9E56-44E9-9574-1BF9FD6443CF");
     private static final AttributeModifier SPEED_MODIFIER_SITTING = new AttributeModifier(SPEED_MODIFIER_SITTING_UUID, "Sitting speed reduction", -0.75D, AttributeModifier.Operation.MULTIPLY_BASE);
 
@@ -74,6 +74,7 @@ public class SoldierEntity extends Animal implements IAnimatable {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new SoldierFloatGoal(this));
         this.goalSelector.addGoal(1, new SoldierSitGoal(this));
+        this.goalSelector.addGoal(2, new SoldierPrayGoal(this, 1.0D, 32));
         this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
@@ -95,6 +96,10 @@ public class SoldierEntity extends Animal implements IAnimatable {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.soe.sit", false));
             return PlayState.CONTINUE;
         }
+        else if(this.isPraying()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.soe.pray", true));
+            return PlayState.CONTINUE;
+        }
 
         event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.soe.idle", true));
         return PlayState.CONTINUE;
@@ -113,6 +118,7 @@ public class SoldierEntity extends Animal implements IAnimatable {
         this.entityData.define(SANCTUARY_VARIANT, 0);
         this.entityData.define(SITTING, false);
         this.entityData.define(MOVING, false);
+        this.entityData.define(PRAYING, false);
     }
 
     @Override
@@ -122,7 +128,7 @@ public class SoldierEntity extends Animal implements IAnimatable {
         tag.putInt("SanctuaryVariant", this.getTypeVariant());
         tag.putBoolean("Sitting", this.isSitting());
         tag.putBoolean("Moving", this.isMoving());
-
+        tag.putBoolean("Praying", this.isPraying());
     }
 
     public void readAdditionalSaveData(CompoundTag tag) {
@@ -131,6 +137,7 @@ public class SoldierEntity extends Animal implements IAnimatable {
         this.entityData.set(SANCTUARY_VARIANT, tag.getInt("SanctuaryVariant"));
         this.setSitting(tag.getBoolean("Sitting"));
         this.setMoving(tag.getBoolean("Moving"));
+        this.setPraying(tag.getBoolean("Praying"));
     }
 
     @Override
@@ -158,22 +165,35 @@ public class SoldierEntity extends Animal implements IAnimatable {
     public boolean isMoving() {
         return this.entityData.get(MOVING);
     }
-
     public void setMoving(boolean moving) {
         this.entityData.set(MOVING, moving);
+    }
+
+    public boolean isPraying(){
+        return this.entityData.get(PRAYING);
+    }
+    public void setPraying(boolean praying) {
+        this.entityData.set(PRAYING, praying);
     }
 
     public boolean isConnect(){
         return this.sanctuary != null;
     }
-
+    public void setSanctuary(SanctuaryAutelBlock sanctuary) {
+        this.sanctuary = sanctuary;
+    }
     public SanctuaryAutelBlock getSanctuary() {
         return sanctuary;
     }
 
-
-    public void setSanctuary(SanctuaryAutelBlock sanctuary) {
-        this.sanctuary = sanctuary;
+    public SanctuaryVariant getSanctuaryVariant() {
+        return SanctuaryVariant.byId(this.getTypeVariant() & 255);
+    }
+    private int getTypeSanctuaryVariant() {
+        return this.entityData.get(SANCTUARY_VARIANT);
+    }
+    public void setSanctuaryVariant(SanctuaryVariant variant) {
+        this.entityData.set(SANCTUARY_VARIANT, variant.getId() & 255);
     }
 
     /* SOUND */
@@ -219,17 +239,7 @@ public class SoldierEntity extends Animal implements IAnimatable {
         this.entityData.set(TYPE_VARIANT, variant.getId() & 255);
     }
 
-    public SanctuaryVariant getSanctuaryVariant() {
-        return SanctuaryVariant.byId(this.getTypeVariant() & 255);
-    }
-
-    private int getTypeSanctuaryVariant() {
-        return this.entityData.get(SANCTUARY_VARIANT);
-    }
-
-    public void setSanctuaryVariant(SanctuaryVariant variant) {
-        this.entityData.set(SANCTUARY_VARIANT, variant.getId() & 255);
-    }
+    /* OTHER */
 
     public Optional<BlockPos> findNearestBlock(Predicate<BlockState> pPredicate, double pDistance) {
         BlockPos blockpos = this.blockPosition();

@@ -5,7 +5,6 @@ import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
 
 public class SoldierSitGoal extends Goal {
-
     private final SoldierEntity soldier;
     private int sitTimer;
     private int cooldown;
@@ -21,7 +20,7 @@ public class SoldierSitGoal extends Goal {
             return false;
         } else if (this.soldier.isSitting()) {
             return true;
-        } else if (this.soldier.isPassenger() || !this.soldier.isOnGround() || this.soldier.isInWater()) {
+        } else if (this.soldier.isPassenger() || !this.soldier.isOnGround() || this.soldier.isInWater() || this.soldier.isPraying() || this.soldier.isMoving()) {
             return false;
         } else if (this.soldier.xxa != 0.0F || this.soldier.yya != 0.0F || this.soldier.zza != 0.0F) {
             return false;
@@ -52,7 +51,7 @@ public class SoldierSitGoal extends Goal {
 
     @Override
     public void stop() {
-        this.cooldown = this.adjustedTickDelay(100);
+        this.cooldown = this.adjustedTickDelay(500);
         this.soldier.setSitting(false);
     }
 

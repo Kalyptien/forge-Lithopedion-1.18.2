@@ -2,6 +2,7 @@ package com.kalyptien.lithopedion;
 
 import com.kalyptien.lithopedion.block.ModBlocks;
 import com.kalyptien.lithopedion.block.entity.ModBlockEntities;
+import com.kalyptien.lithopedion.effect.ModEffects;
 import com.kalyptien.lithopedion.entity.ModEntityTypes;
 import com.kalyptien.lithopedion.entity.client.ChildrenRenderer;
 import com.kalyptien.lithopedion.entity.client.SoldierRenderer;
@@ -45,6 +46,8 @@ public class Lithopedion
     {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        ModEffects.register(eventBus);
+
         ModItems.register(eventBus);
         ModBlocks.register(eventBus);
 
@@ -64,6 +67,10 @@ public class Lithopedion
     }
 
     private void clientSetup(final FMLClientSetupEvent event){
+
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PETRIFIED_DOOR.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PETRIFIED_TRAPDOOR.get(), RenderType.translucent());
+
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.LITHOPEDION_CLAY.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.LITHOPEDION_SOLIDER.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.LITHOPEDION_JADE.get(), RenderType.translucent());
@@ -80,6 +87,8 @@ public class Lithopedion
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNGUS_STATUS.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNGUS_STONE.get(), RenderType.translucent());
 
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.PETRIFIED_WHEAT_PLANT.get(), RenderType.cutout());
+
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.EARTH_FURNACE.get(), RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(ModBlocks.POTTERY_WHEEL.get(), RenderType.translucent());
 
@@ -91,7 +100,6 @@ public class Lithopedion
 
     private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+        LOGGER.info("LITHOPEDION : Starting...");
     }
 }

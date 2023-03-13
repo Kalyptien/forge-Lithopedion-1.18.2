@@ -1,5 +1,6 @@
 package com.kalyptien.lithopedion.block.custom;
 
+import com.kalyptien.lithopedion.LithopedionUtil;
 import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
 import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
 import com.kalyptien.lithopedion.variant.SanctuaryBlockVariant;
@@ -17,8 +18,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -48,9 +51,15 @@ public class SanctuaryStatusBlock extends SanctuaryBlock {
         this.SBvariant = SanctuaryBlockVariant.STATUS;
     }
 
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
+        return null;
+    }
+
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
-        for(BlockPos blockpos : withinManhattan(pPos, area, area, area)) {
+        for(BlockPos blockpos : withinManhattan(pPos, LithopedionUtil.sanctuary_autel_zone, LithopedionUtil.sanctuary_autel_zone, LithopedionUtil.sanctuary_autel_zone)) {
             Block block = pLevel.getBlockState(blockpos).getBlock();
             if (this.isValidSanctuaryBlock(block)) {
                 SanctuaryBlock Sblock = (SanctuaryBlock) block;
@@ -64,6 +73,11 @@ public class SanctuaryStatusBlock extends SanctuaryBlock {
                     this.setSanctuary(Sblock.getSanctuary());
                     break;
                 }
+            }
+        }
+        for(int x = pPos.getX() - area; x < pPos.getX() + area + 1; x++){
+            for(int z = pPos.getZ() - area; z < pPos.getZ() + area + 1; z++){
+                pLevel.setBlock(new BlockPos(x,pPos.getY() - 1,z), Blocks.BLUE_TERRACOTTA.defaultBlockState(), 0);
             }
         }
     }
@@ -98,6 +112,13 @@ public class SanctuaryStatusBlock extends SanctuaryBlock {
     @Override
     public void playerWillDestroy(Level pLevel, BlockPos pPos, BlockState pState, Player pPlayer) {
         this.spawnDestroyParticles(pLevel, pPlayer, pPos, pState);
+        pLevel.gameEvent(pPlayer, GameEvent.BLOCK_DESTROY, pPos);
+
+        for(int x = pPos.getX() - area; x < pPos.getX() + area + 1; x++){
+            for(int z = pPos.getZ() - area; z < pPos.getZ() + area + 1; z++){
+                pLevel.setBlock(new BlockPos(x,pPos.getY() - 1,z), Blocks.GRASS_BLOCK.defaultBlockState(), 0);
+            }
+        }
     }
 
     public void setJadeProcess(BlockState pState, int value){

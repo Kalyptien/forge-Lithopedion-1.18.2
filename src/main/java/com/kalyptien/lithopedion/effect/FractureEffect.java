@@ -14,6 +14,8 @@ public class FractureEffect extends MobEffect {
     @Override
     public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
         if (!pLivingEntity.level.isClientSide()) {
+            System.out.println(pLivingEntity.getDeltaMovement().x);
+            System.out.println(pLivingEntity.getDeltaMovement().x - pLivingEntity.getX());
             if((pAmplifier == 0)  && (pLivingEntity.getSpeed()  >= 1.5) ){
                 pLivingEntity.hurt(DamageSource.MAGIC, 1.0F);
                 pLivingEntity.teleportTo(pLivingEntity.getX() + pLivingEntity.getDeltaMovement().x, pLivingEntity.getY(), pLivingEntity.getZ() + pLivingEntity.getDeltaMovement().z);

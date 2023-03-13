@@ -4,10 +4,11 @@ import com.kalyptien.lithopedion.entity.custom.ChildrenEntity;
 import com.kalyptien.lithopedion.entity.custom.SoldierEntity;
 import com.kalyptien.lithopedion.variant.SanctuaryBlockVariant;
 import com.kalyptien.lithopedion.variant.SanctuaryVariant;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-public abstract class SanctuaryBlock extends Block {
+public abstract class SanctuaryBlock extends BaseEntityBlock {
 
     private SanctuaryAutelBlock sanctuary;
     public SanctuaryVariant Svariant;

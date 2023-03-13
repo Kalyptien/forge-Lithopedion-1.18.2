@@ -82,29 +82,30 @@ public class ChildrenFloatGoal extends FloatGoal {
 
             MoveControl movecontrol = this.children.getMoveControl();
 
-            double X = movecontrol.getWantedX() - this.children.getX();
-            double Y = movecontrol.getWantedY() - this.children.getY();
-            double Z = movecontrol.getWantedZ() - this.children.getZ();
+            double X = movecontrol.getWantedX();
+            double Y = movecontrol.getWantedY();
+            double Z = movecontrol.getWantedZ();
 
              if(autel.isPresent() &&
-                     autel.get().getX() + LithopedionUtil.sanctuary_autel_zone < X && X < autel.get().getX() - LithopedionUtil.sanctuary_autel_zone &&
-                     autel.get().getY() + LithopedionUtil.sanctuary_autel_zone < Y && Y < autel.get().getY() - LithopedionUtil.sanctuary_autel_zone &&
-                     autel.get().getZ() + LithopedionUtil.sanctuary_autel_zone < Z && Z < autel.get().getZ() - LithopedionUtil.sanctuary_autel_zone){
+                     autel.get().getX() - LithopedionUtil.sanctuary_autel_zone < X && X < autel.get().getX() + LithopedionUtil.sanctuary_autel_zone &&
+                     autel.get().getY() - LithopedionUtil.sanctuary_autel_zone < Y && Y < autel.get().getY() + LithopedionUtil.sanctuary_autel_zone &&
+                     autel.get().getZ() - LithopedionUtil.sanctuary_autel_zone < Z && Z < autel.get().getZ() + LithopedionUtil.sanctuary_autel_zone){
                  return super.canUse();
              }
              else if (status.isPresent() &&
-                     status.get().getX() + LithopedionUtil.sanctuary_status_zone < X && X < status.get().getX() - LithopedionUtil.sanctuary_status_zone &&
-                     status.get().getY() + LithopedionUtil.sanctuary_status_zone < Y && Y < status.get().getY() - LithopedionUtil.sanctuary_status_zone &&
-                     status.get().getZ() + LithopedionUtil.sanctuary_status_zone < Z && Z < status.get().getZ() - LithopedionUtil.sanctuary_status_zone){
+                     status.get().getX() - LithopedionUtil.sanctuary_status_zone < X && X < status.get().getX() + LithopedionUtil.sanctuary_status_zone &&
+                     status.get().getY() - LithopedionUtil.sanctuary_status_zone < Y && Y < status.get().getY() + LithopedionUtil.sanctuary_status_zone &&
+                     status.get().getZ() - LithopedionUtil.sanctuary_status_zone < Z && Z < status.get().getZ() + LithopedionUtil.sanctuary_status_zone){
                  return super.canUse();
              }
              else if (stone.isPresent() &&
-                     stone.get().getX() + LithopedionUtil.sanctuary_stone_zone < X && X < stone.get().getX() - LithopedionUtil.sanctuary_stone_zone &&
-                     stone.get().getY() + LithopedionUtil.sanctuary_stone_zone < Y && Y < stone.get().getY() - LithopedionUtil.sanctuary_stone_zone &&
-                     stone.get().getZ() + LithopedionUtil.sanctuary_stone_zone < Z && Z < stone.get().getZ() - LithopedionUtil.sanctuary_stone_zone){
+                     stone.get().getX() - LithopedionUtil.sanctuary_stone_zone < X && X < stone.get().getX() + LithopedionUtil.sanctuary_stone_zone &&
+                     stone.get().getY() - LithopedionUtil.sanctuary_stone_zone < Y && Y < stone.get().getY() + LithopedionUtil.sanctuary_stone_zone &&
+                     stone.get().getZ() - LithopedionUtil.sanctuary_stone_zone < Z && Z < stone.get().getZ() + LithopedionUtil.sanctuary_stone_zone){
                  return super.canUse();
              }
              else{
+                 movecontrol.setWantedPosition(children.getX(),children.getY(),children.getZ(),0);
                  return false;
              }
         }
